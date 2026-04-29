@@ -4,21 +4,25 @@ USERID=$(id -u)
 if [ $USERID -ne 0 ]
 then
     echo "Error : please run with root user"
+    exit 1
 else
     echo "already it has runnig with root user"
 fi
+VALUE(){
+    if [ $1 -eq 0 ]
+    then 
+    echo " installing $2 is successsful"
+    else
+    echo "installing $2 is failure"
+    fi
+    }
 dnf list installed mysql
 if [ $? -ne 0 ]
 then
-   echo "please install the mysql"
+   echo "mysql not installed the please intall it"
    dnf install mysql -y
-   if [ $? -eq 0 ]
-then
-   echo "mysql install status is success"
-    else 
-   echo "mysql install status is failure"
-   exit 1
+   VALUE() $? "mysql"
+   else 
+   echo "mq sql is already installed"
    fi
-else
-   echo "mysql is already installed nothing to do" 
-fi
+
