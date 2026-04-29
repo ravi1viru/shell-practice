@@ -14,6 +14,7 @@ VALIDATE(){
     echo " installing $2 is successsful"
     else
     echo "installing $2 is failure"
+    exit 1
     fi
     }
 dnf list installed mysql
@@ -25,6 +26,7 @@ then
    else 
    echo "mq sql is already installed"
    fi
+
 dnf list installed nginx
 if [ $? -ne 0 ]
 then
@@ -34,6 +36,7 @@ then
    else 
    echo "nginx is already installed"
    fi
+
 dnf list installed python3
 if [ $? -ne 0 ]
 then
