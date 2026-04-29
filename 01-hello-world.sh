@@ -1,6 +1,4 @@
 #!/bin/bash
 
-MOVIES=("OG" "UBS" "VSB")
-
-echo "the all movies is ${MOVIES[@]}"
+echo "all the vriables passed in the script : $@ "
 
