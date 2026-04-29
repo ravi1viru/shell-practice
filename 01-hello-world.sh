@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "please enter the pin number"
-read -s PIN
-echo "the pin number is $PIN"
+MOVIES=("OG" "UBS" "VSB")
+
+echo "the first movie is ${MOVIES[0]}"
 
