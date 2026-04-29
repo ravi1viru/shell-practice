@@ -33,3 +33,4 @@ echo "please install the $package server" &>>$LOG_NAM
 else      
 echo "already installed the $package server no need" &>>$LOG_NAM
 fi
+done
