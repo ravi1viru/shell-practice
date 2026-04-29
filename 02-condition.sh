@@ -8,7 +8,7 @@ then
 else
     echo "already it has runnig with root user"
 fi
-VALUE(){
+VALIDATE(){
     if [ $1 -eq 0 ]
     then 
     echo " installing $2 is successsful"
@@ -21,7 +21,7 @@ if [ $? -ne 0 ]
 then
    echo "mysql not installed the please intall it"
    dnf install mysql -y
-   VALUE() $? "mysql"
+   VALIDATE $? "mysql"
    else 
    echo "mq sql is already installed"
    fi
