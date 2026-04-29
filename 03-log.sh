@@ -1,36 +1,21 @@
-#!/bin/bash
 
-LOG_FOLDER="/var/log/shell-practice"
-SCRIPT_NAME=$(echo $0 | cut -d "." -f1)
-LOG_NAM="$LOG_FOLDER/$SCRIPT_NAME.log"
-PACKAGES=("mysql" "python3" "nginx")
-mkdir -p $LOG_FOLDER
-USERID=$(id -u)
-if [ $USERID -ne 0 ]
-then
-   echo -e " ERROR :: Please run the script with root user" &>>$LOG_NAM
-   exit 1
-else
-   echo "code is run with the rootuser" &>>$LOG_NAM
-fi
-VALIDATE(){
-    if [ $1 -eq 0 ]
-    then
-      echo "the software $2 is installed ... SUCCESS" &>>$LOG_NAM
-    else
-      echo "the software $2 is installed ... FAILURE" &>>$LOG_NAM
-      exit 1
-    fi
-}
-for package in ${PACKAGES[@]}
+
+AMI_ID="ami-0220d79f3f480ecf5"
+SG_ID="sg-06d6e4665a94c1ffe"
+INSTANCES=("mangodb" "redis" "mysql" "rabbitmq" "catalogue" "user" "cart" "dispatch" "frontend")
+ZONE_ID="Z07938342NCI81HS4HAH4"
+DOMAIN_NAME="leardevops.online"
+
+for instance in ${INSTANCES[@]}
 do
-    dnf list installed $package &>>$LOG_NAM
-if [ $? -ne 0 ]
-then 
-echo "please install the $package server" &>>$LOG_NAM
-     dnf install $package -y
-     VALIDATE $? "$package"
-else      
-echo "already installed the $package server no need" &>>$LOG_NAM
+INSTANCE_ID=$(aws ec2 run-instances --image-id ami-0220d79f3f480ecf5 --instance-type t2.micro --security-group-ids sg-06d6e4665a94c1ffe --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=$instance}]" --query "Instances[0].InstanceId" --output text)
+
+if [ $instance != "frontend" ]
+then
+    IP=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID --query "Reservations[0].Instances[0].PrivateIpAddress" --output text)
+else
+    IP=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID --query "Reservations[0].Instances[0].PublicIpAddress" --output text)
 fi
+
+echo "$instance IP address: $IP"
 done
