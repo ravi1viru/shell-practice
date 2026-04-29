@@ -7,7 +7,7 @@ then
 else
     echo "already it has runnig with root user"
 fi
-dnf install mysql
+dnf list installed mysql
 if [ $? -ne 0 ]
    echo "please install the mysql"
    dnf install mysql -y
