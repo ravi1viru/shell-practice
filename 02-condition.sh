@@ -1,4 +1,4 @@
-!#/bin/bash
+#!/bin/bash
 
 USERID=$(id -u)
 if [ $USERID -ne 0 ]
