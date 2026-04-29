@@ -25,4 +25,21 @@ then
    else 
    echo "mq sql is already installed"
    fi
-
+dnf list installed nginx
+if [ $? -ne 0 ]
+then
+   echo "nginx not installed the please intall it"
+   dnf install mysql -y
+   VALIDATE $? "nginx"
+   else 
+   echo "nginx is already installed"
+   fi
+dnf list installed python3
+if [ $? -ne 0 ]
+then
+   echo "python3 not installed the please intall it"
+   dnf install python3 -y
+   VALIDATE $? "python3"
+   else 
+   echo "python3 is already installed"
+   fi
