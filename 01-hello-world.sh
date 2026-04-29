@@ -1,4 +1,4 @@
 #!/bin/bash
 
-echo "script name: $PWD"
+echo "home directory of the user who is running the script: $HOME"
 
