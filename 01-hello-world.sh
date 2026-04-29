@@ -1,4 +1,4 @@
 #!/bin/bash
 
-echo "home directory of the user who is running the script: $HOME"
+echo "which user is running the script: $USER"
 
