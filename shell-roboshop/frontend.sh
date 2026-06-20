@@ -61,3 +61,4 @@ cp $SCRIPT_DIR/nginx.conf /etc/nginx/nginx.conf
 VALIDATE $? "coping nginx files"  
 
 systemctl restart nginx 
+VALIDATE $? "start the nginx" 
