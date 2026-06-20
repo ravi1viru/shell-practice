@@ -50,7 +50,7 @@ VALIDATE $? "create roboshop user"
   echo "user already created no need to create new one"
 fi
 
-mkdir /app  &>>$LOG_FILE
+mkdir -p /app  &>>$LOG_FILE
 VALIDATE $? "create app directory"
 
 curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip  &>>$LOG_FILE
