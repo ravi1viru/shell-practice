@@ -73,8 +73,8 @@ VALIDATE $? "start shipping"
 dnf install mysql -y 
 VALIDATE $? "istall mysql"
 
-mysql -h <MYSQL-SERVER-IPADDRESS> -uroot -pRavi1viru@1 < /app/db/schema.sql  &>>$LOG_FILE
-mysql -h <MYSQL-SERVER-IPADDRESS> -uroot -pRavi1viru@1 < /app/db/app-user.sql  &>>$LOG_FILE
-mysql -h <MYSQL-SERVER-IPADDRESS> -uroot -pRavi1viru@1 < /app/db/master-data.sql &>>$LOG_FILE
+mysql -h mysql.leardevops.online -uroot -pRavi1viru@1 < /app/db/schema.sql  &>>$LOG_FILE
+mysql -h mysql.leardevops.online -uroot -pRavi1viru@1 < /app/db/app-user.sql  &>>$LOG_FILE
+mysql -h mysql.leardevops.online -uroot -pRavi1viru@1 < /app/db/master-data.sql &>>$LOG_FILE
 systemctl restart shipping
 VALIDATE $? "start shipping"
