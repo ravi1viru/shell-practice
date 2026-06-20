@@ -55,26 +55,26 @@ cd /app  &>>$LOG_FILE
 unzip /tmp/shipping.zip &>>$LOG_FILE
 VALIDATE $? "unzip the file"
 
-mvn clean package 
+mvn clean package &>>$LOG_FILE
 VALIDATE $? "cleanthe all packages in maven"
 
-mv target/shipping-1.0.jar shipping.jar 
+mv target/shipping-1.0.jar shipping.jar &>>$LOG_FILE
 VALIDATE $? "moving and renaming jar files"
 
-cp $SCRIPT_DIR/shipping.service /etc/systemd/system/shipping.service
+cp $SCRIPT_DIR/shipping.service /etc/systemd/system/shipping.service &>>$LOG_FILE
 
-systemctl daemon-reload
+systemctl daemon-reload &>>$LOG_FILE
 VALIDATE $? "relod"
 
-systemctl enable shipping 
-systemctl start shipping
+systemctl enable shipping  &>>$LOG_FILE
+systemctl start shipping    &>>$LOG_FILE
 VALIDATE $? "start shipping"
 
 dnf install mysql -y 
 VALIDATE $? "istall mysql"
 
-mysql -h <MYSQL-SERVER-IPADDRESS> -uroot -pRavi1viru@1 < /app/db/schema.sql
-mysql -h <MYSQL-SERVER-IPADDRESS> -uroot -pRavi1viru@1 < /app/db/app-user.sql 
-mysql -h <MYSQL-SERVER-IPADDRESS> -uroot -pRavi1viru@1 < /app/db/master-data.sql
+mysql -h <MYSQL-SERVER-IPADDRESS> -uroot -pRavi1viru@1 < /app/db/schema.sql  &>>$LOG_FILE
+mysql -h <MYSQL-SERVER-IPADDRESS> -uroot -pRavi1viru@1 < /app/db/app-user.sql  &>>$LOG_FILE
+mysql -h <MYSQL-SERVER-IPADDRESS> -uroot -pRavi1viru@1 < /app/db/master-data.sql &>>$LOG_FILE
 systemctl restart shipping
 VALIDATE $? "start shipping"
