@@ -75,4 +75,11 @@ cp $SCRIPT_DIR/mongo.repo /etc/yum.repos.d/mongo.repo &>>$LOG_FILE
 dnf install mongodb-mongosh -y &>>$LOG_FILE
 VALIDATE $? "mangodb client"
 
+STATUS=$(mongosh --host mongodb.leardevops.online --eval 'db.getMongo().getDBNames().indexOf("catalogue")')
+if [ STATUS -le 0]
+then 
 mongosh --host mongodb.leardevops.online </app/db/master-data.js &>>$LOG_FILE
+VALIDATE $? "loading the data"
+ else
+ echo "data already added skipped"
+fi
