@@ -76,7 +76,7 @@ dnf install mongodb-mongosh -y &>>$LOG_FILE
 VALIDATE $? "mangodb client"
 
 STATUS=$(mongosh --host mongodb.leardevops.online --eval 'db.getMongo().getDBNames().indexOf("catalogue")')
-if [ STATUS -le 0]
+if [ STATUS -lt 0 ]
 then 
 mongosh --host mongodb.leardevops.online </app/db/master-data.js &>>$LOG_FILE
 VALIDATE $? "loading the data"
