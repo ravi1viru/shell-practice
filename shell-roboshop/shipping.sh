@@ -49,10 +49,10 @@ mkdir -p /app  &>>$LOG_FILE
 VALIDATE $? "create app directory"
 
 curl -o /tmp/shipping.zip https://roboshop-artifacts.s3.amazonaws.com/shipping-v3.zip  &>>$LOG_FILE
-VALIDATE $? "download catelogue"
+VALIDATE $? "download shipping"
 
 cd /app  &>>$LOG_FILE
-unzip /tmp/shipping.zip &>>$LOG_FILE
+unzip -o /tmp/shipping.zip &>>$LOG_FILE
 VALIDATE $? "unzip the file"
 
 mvn clean package &>>$LOG_FILE
