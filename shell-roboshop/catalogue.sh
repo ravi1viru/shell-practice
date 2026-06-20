@@ -25,9 +25,9 @@ fi
 VALIDATE(){
     if [ $1 -eq 0 ]
     then
-      echo "$2 is ... $R SUCCESS $N" |tee -a $LOG_FILE
+      echo -e "$2 is ... $R SUCCESS $N" |tee -a $LOG_FILE
     else
-      echo " $2 is  ... $R FAILURE $N" |tee -a $LOG_FILE
+      echo -e " $2 is  ... $Y FAILURE $N" |tee -a $LOG_FILE
       exit 1
     fi
 }
@@ -41,8 +41,14 @@ VALIDATE $? "enable the version 20"
 dnf install nodejs -y &>>$LOG_FILE
 VALIDATE $? "install nodejs"
 
+id roboshop
+if [ $? -ne 0 ]
+ then
 useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop &>>$LOG_FILE
 VALIDATE $? "create roboshop user"
+ else
+  echo "user already created no need to create new one"
+fi
 
 mkdir /app  &>>$LOG_FILE
 VALIDATE $? "create app directory"
