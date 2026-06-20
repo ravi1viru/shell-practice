@@ -24,9 +24,9 @@ fi
 VALIDATE(){
     if [ $1 -eq 0 ]
     then
-      echo "$2 is ... $R SUCCESS $N" &>>$LOG_NAM
+      echo "$2 is ... $R SUCCESS $N" &>>$LOG_FILE
     else
-      echo " $2 is  ... $R FAILURE $N" &>>$LOG_NAM
+      echo " $2 is  ... $R FAILURE $N" &>>$LOG_FILE
       exit 1
     fi
 }
