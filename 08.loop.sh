@@ -1,52 +1,68 @@
 #!/bin/bash
 
-R="\e[31m"
-G="\e[32m"
-Y="\e[33m"
-N="\e[0m"
+# Colors
+RED="\e[31m"
+GREEN="\e[32m"
+YELLOW="\e[33m"
+BLUE="\e[34m"
+CYAN="\e[36m"
+BOLD="\e[1m"
+RESET="\e[0m"
 
+# Log configuration
 LOG_FOLDER="/var/log/shell-practice"
 
 SCRIPT_NAME=$(echo "$0" | cut -d "." -f1)
 
 LOG_FILE="$LOG_FOLDER/$SCRIPT_NAME.log"
 
+# Packages to install
 PACKAGES=("nginx" "mysql" "python")
 
+# Create log directory
 mkdir -p "$LOG_FOLDER"
 
-userid=$(id -u)
+# Check root user
+USERID=$(id -u)
 
-if [ "$userid" -ne 0 ]
+if [ "$USERID" -ne 0 ]
 then
-    echo -e "$R Error :: please run with root user $N" | tee -a "$LOG_FILE"
+    echo -e "${RED}${BOLD}ERROR:${RESET} Please run this script with root user" | tee -a "$LOG_FILE"
     exit 1
 else
-    echo -e "$Y Installing with root user $N" | tee -a "$LOG_FILE"
+    echo -e "${GREEN}${BOLD}SUCCESS:${RESET} Running with root user" | tee -a "$LOG_FILE"
 fi
 
+echo -e "${BLUE}${BOLD}========================================${RESET}" | tee -a "$LOG_FILE"
+echo -e "${CYAN}${BOLD}       PACKAGE INSTALLATION${RESET}" | tee -a "$LOG_FILE"
+echo -e "${BLUE}${BOLD}========================================${RESET}" | tee -a "$LOG_FILE"
 
+
+# Validation function
 VALIDATE() {
 
     if [ "$1" -eq 0 ]
     then
-        echo "$2 installation SUCCESS" | tee -a "$LOG_FILE"
+        echo -e "${GREEN}${BOLD}SUCCESS:${RESET} $2 installation completed" | tee -a "$LOG_FILE"
     else
-        echo "$2 installation FAILURE" | tee -a "$LOG_FILE"
+        echo -e "${RED}${BOLD}FAILURE:${RESET} $2 installation failed" | tee -a "$LOG_FILE"
     fi
 
 }
 
 
+# Install packages
 for package in "${PACKAGES[@]}"
 do
+
+    echo -e "${YELLOW}Checking $package...${RESET}" | tee -a "$LOG_FILE"
 
     dnf list installed "$package" &>> "$LOG_FILE"
 
     if [ $? -ne 0 ]
     then
 
-        echo "Please install the $package package" | tee -a "$LOG_FILE"
+        echo -e "${YELLOW}Installing $package...${RESET}" | tee -a "$LOG_FILE"
 
         dnf install "$package" -y 2>&1 | tee -a "$LOG_FILE"
 
@@ -54,8 +70,12 @@ do
 
     else
 
-        echo "Already installed $package package, no need to install" | tee -a "$LOG_FILE"
+        echo -e "${CYAN}INFO:${RESET} $package is already installed" | tee -a "$LOG_FILE"
 
     fi
 
 done
+
+echo -e "${BLUE}${BOLD}========================================${RESET}" | tee -a "$LOG_FILE"
+echo -e "${GREEN}${BOLD}       SCRIPT EXECUTION COMPLETED${RESET}" | tee -a "$LOG_FILE"
+echo -e "${BLUE}${BOLD}========================================${RESET}" | tee -a "$LOG_FILE"
