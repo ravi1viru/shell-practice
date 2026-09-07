@@ -9,7 +9,7 @@ LOG_FOLDER="/var/log/shell-practice"
 
 SCRIPT_NAME=$(echo "$0" | cut -d "." -f1)
 
-LOG_NAME="$LOG_FOLDER/$SCRIPT_NAME.log"
+LOG_FILE="$LOG_FOLDER/$SCRIPT_NAME.log"
 
 PACKAGES=("nginx" "mysql" "python")
 
@@ -19,33 +19,43 @@ userid=$(id -u)
 
 if [ "$userid" -ne 0 ]
 then
-    echo -e "$R Error :: please run with root user $N"
+    echo -e "$R Error :: please run with root user $N" | tee -a "$LOG_FILE"
     exit 1
 else
-    echo -e "$Y installing with root user $N"
+    echo -e "$Y Installing with root user $N" | tee -a "$LOG_FILE"
 fi
 
+
 VALIDATE() {
+
     if [ "$1" -eq 0 ]
     then
-        echo "$2 is installing SUCCESS"
+        echo "$2 installation SUCCESS" | tee -a "$LOG_FILE"
     else
-        echo "$2 is installing FAILURE"
+        echo "$2 installation FAILURE" | tee -a "$LOG_FILE"
     fi
+
 }
+
 
 for package in "${PACKAGES[@]}"
 do
 
-    dnf list installed "$package" &>> "$LOG_NAME"
+    dnf list installed "$package" &>> "$LOG_FILE"
 
     if [ $? -ne 0 ]
     then
-        echo "please install the $package server"
-        dnf install "$package" -y
-        VALIDATE $? "$package"
+
+        echo "Please install the $package package" | tee -a "$LOG_FILE"
+
+        dnf install "$package" -y 2>&1 | tee -a "$LOG_FILE"
+
+        VALIDATE "${PIPESTATUS[0]}" "$package"
+
     else
-        echo "already installed $package server, no need"
+
+        echo "Already installed $package package, no need to install" | tee -a "$LOG_FILE"
+
     fi
 
 done
