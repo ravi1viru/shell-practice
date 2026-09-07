@@ -1,81 +1,117 @@
 #!/bin/bash
 
-# Colors
-RED="\e[31m"
-GREEN="\e[32m"
-YELLOW="\e[33m"
-BLUE="\e[34m"
-CYAN="\e[36m"
-BOLD="\e[1m"
-RESET="\e[0m"
+# ==============================
+# COLORS
+# ==============================
 
-# Log configuration
+R="\e[31m"       # Red
+G="\e[32m"       # Green
+Y="\e[33m"       # Yellow
+B="\e[34m"       # Blue
+C="\e[36m"       # Cyan
+N="\e[0m"        # Reset
+BOLD="\e[1m"
+
+
+# ==============================
+# LOG CONFIGURATION
+# ==============================
+
 LOG_FOLDER="/var/log/shell-practice"
 
-SCRIPT_NAME=$(echo "$0" | cut -d "." -f1)
+SCRIPT_NAME=$(basename "$0" .sh)
 
 LOG_FILE="$LOG_FOLDER/$SCRIPT_NAME.log"
 
-# Packages to install
-PACKAGES=("nginx" "mysql" "python")
 
-# Create log directory
+# ==============================
+# PACKAGES
+# ==============================
+
+PACKAGES=("nginx" "mysql" "python3")
+
+
+# ==============================
+# CREATE LOG DIRECTORY
+# ==============================
+
 mkdir -p "$LOG_FOLDER"
 
-# Check root user
+
+# ==============================
+# CHECK ROOT USER
+# ==============================
+
 USERID=$(id -u)
 
 if [ "$USERID" -ne 0 ]
 then
-    echo -e "${RED}${BOLD}ERROR:${RESET} Please run this script with root user" | tee -a "$LOG_FILE"
+    echo -e "${R}${BOLD}ERROR:${N} Please run this script with root user"
     exit 1
 else
-    echo -e "${GREEN}${BOLD}SUCCESS:${RESET} Running with root user" | tee -a "$LOG_FILE"
+    echo -e "${G}${BOLD}SUCCESS:${N} Running with root user" | tee -a "$LOG_FILE"
 fi
 
-echo -e "${BLUE}${BOLD}========================================${RESET}" | tee -a "$LOG_FILE"
-echo -e "${CYAN}${BOLD}       PACKAGE INSTALLATION${RESET}" | tee -a "$LOG_FILE"
-echo -e "${BLUE}${BOLD}========================================${RESET}" | tee -a "$LOG_FILE"
+
+# ==============================
+# HEADER
+# ==============================
+
+echo -e "${B}${BOLD}========================================${N}" | tee -a "$LOG_FILE"
+echo -e "${C}${BOLD}       PACKAGE INSTALLATION${N}" | tee -a "$LOG_FILE"
+echo -e "${B}${BOLD}========================================${N}" | tee -a "$LOG_FILE"
 
 
-# Validation function
+# ==============================
+# VALIDATION FUNCTION
+# ==============================
+
 VALIDATE() {
 
     if [ "$1" -eq 0 ]
     then
-        echo -e "${GREEN}${BOLD}SUCCESS:${RESET} $2 installation completed" | tee -a "$LOG_FILE"
+        echo -e "${G}${BOLD}SUCCESS:${N} $2 installation completed" | tee -a "$LOG_FILE"
     else
-        echo -e "${RED}${BOLD}FAILURE:${RESET} $2 installation failed" | tee -a "$LOG_FILE"
+        echo -e "${R}${BOLD}FAILURE:${N} $2 installation failed" | tee -a "$LOG_FILE"
     fi
 
 }
 
 
-# Install packages
+# ==============================
+# PACKAGE INSTALLATION
+# ==============================
+
 for package in "${PACKAGES[@]}"
 do
 
-    echo -e "${YELLOW}Checking $package...${RESET}" | tee -a "$LOG_FILE"
+    echo -e "${Y}Checking $package...${N}" | tee -a "$LOG_FILE"
 
-    dnf list installed "$package" &>> "$LOG_FILE"
-
-    if [ $? -ne 0 ]
+    # Check whether package is installed
+    if dnf list installed "$package" &>/dev/null
     then
 
-        echo -e "${YELLOW}Installing $package...${RESET}" | tee -a "$LOG_FILE"
-
-        dnf install "$package" -y 2>&1 | tee -a "$LOG_FILE"
-
-        VALIDATE "${PIPESTATUS[0]}" "$package"
+        echo -e "${G}INFO:${N} $package is already installed" | tee -a "$LOG_FILE"
 
     else
 
-        echo -e "${CYAN}INFO:${RESET} $package is already installed" | tee -a "$LOG_FILE"
+        echo -e "${Y}Installing $package...${N}" | tee -a "$LOG_FILE"
+
+        # Install package
+        dnf install "$package" -y 2>&1 | tee -a "$LOG_FILE"
+
+        # Check dnf status, not tee status
+        VALIDATE "${PIPESTATUS[0]}" "$package"
 
     fi
 
 done
 
-echo -e "${BLUE}${BOLD}========================================${RESET}" | tee -a "$LOG_FILE"
-echo -e "${GREEN}${BOLD}       SCRIPT EXECUTION COMPLETED${RESET}" | tee -a "$LOG_FILE"
-echo -e "${BLUE}${BOLD}========================================${RESET}" | tee -a "$LOG_FILE"
+
+# ==============================
+# COMPLETED
+# ==============================
+
+echo -e "${B}${BOLD}========================================${N}" | tee -a "$LOG_FILE"
+echo -e "${G}${BOLD}     SCRIPT EXECUTION COMPLETED${N}" | tee -a "$LOG_FILE"
+echo -e "${B}${BOLD}========================================${N}" | tee -a "$LOG_FILE"
